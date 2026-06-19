@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
 import './index.scss';
 
-import lightBtn from './assets/img/light_btn.png';
-import darkBtn from './assets/img/dark_btn.png';
-import filterIcon from './assets/img/icon_btn.png';
-import searchIcon from './assets/img/icons8-search.svg'; // Импорт вашей SVG-лупы
+import a1 from './assets/img/light_btn.png';
+import a2 from './assets/img/dark_btn.png';
+import a3 from './assets/img/icon_btn.png';
+import a4 from './assets/img/icons8-search.svg';
 
-// Массив расширен ровно до 20 карточек
-const PAINTINGS_DATA = [
+const DATA = [
   { id: 1, title: "CASCATE DI TIVOLI", year: 1761, artist: "JEAN-HONORE FRAGONARD", museum: "LOUVRE MUSEUM", img: "./src/assets/img/cascateditivoli.jpg" },
   { id: 2, title: "PORTRAIT OF VINCENT VAN GOGH", year: 1886, artist: "VINCENT VAN GOGH", museum: "MUSEUM OF MODERN ART", img: "./src/assets/img/PortraitofVincentvanGogh.png" },
   { id: 3, title: "UNEQUAL MARRIAGE", year: 1862, artist: "JEAN-HONORE FRAGONARD", museum: "LOUVRE MUSEUM", img: "./src/assets/img/Unequalmarriage.png" },
@@ -29,121 +28,110 @@ const PAINTINGS_DATA = [
   { id: 20, title: "SPRINGTIME", year: 1873, artist: "PIERRE-AUGUSTE COT", museum: "METROPOLITAN MUSEUM", img: "./src/assets/img/PIERRE-AUGUSTE_COT_-_Primavera_(Museo_Metropolitano_de_Nueva_York,_1873._Óleo_sobre_lienzo,_213.4_x_127_cm).jpg" },
 ];
 
-const ITEMS_PER_PAGE = 6;
+const LIMIT = 6;
 
 function App() {
-  const [isDarkTheme, setIsDarkTheme] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filteredPaintings, setFilteredPaintings] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [t, setT] = useState(true);
+  const [q, setQ] = useState('');
+  const [r, setR] = useState([]);
+  const [p, setP] = useState(1);
 
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [selectedArtist, setSelectedArtist] = useState('');
-  const [selectedMuseum, setSelectedMuseum] = useState('');
-  const [startYear, setStartYear] = useState('');
-  const [endYear, setEndYear] = useState('');
-  const [accordionOpen, setAccordionOpen] = useState({
-    artist: false,
-    museum: false,
-    years: false
-  });
+  const [s, setS] = useState(false);
+  const [art, setArt] = useState('');
+  const [mus, setMus] = useState('');
+  const [y1, setY1] = useState('');
+  const [y2, setY2] = useState('');
+  const [acc, setAcc] = useState({ a: false, m: false, y: false });
 
-  const uniqueArtists = [...new Set(PAINTINGS_DATA.map(p => p.artist))].sort();
-  const uniqueMuseums = [...new Set(PAINTINGS_DATA.map(p => p.museum))].sort();
+  const artists = [...new Set(DATA.map(e => e.artist))].sort();
+  const museums = [...new Set(DATA.map(e => e.museum))].sort();
 
   useEffect(() => {
-    const filtered = PAINTINGS_DATA.filter(painting => {
-      const matchesSearch = painting.title.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesArtist = selectedArtist ? painting.artist === selectedArtist : true;
-      const matchesMuseum = selectedMuseum ? painting.museum === selectedMuseum : true;
-      const matchesStartYear = startYear ? painting.year >= parseInt(startYear) : true;
-      const matchesEndYear = endYear ? painting.year <= parseInt(endYear) : true;
-
-      return matchesSearch && matchesArtist && matchesMuseum && matchesStartYear && matchesEndYear;
+    const filtered = DATA.filter(item => {
+      const matchQ = item.title.toLowerCase().includes(q.toLowerCase());
+      const matchArt = art ? item.artist === art : true;
+      const matchMus = mus ? item.museum === mus : true;
+      const matchY1 = y1 ? item.year >= parseInt(y1) : true;
+      const matchY2 = y2 ? item.year <= parseInt(y2) : true;
+      return matchQ && matchArt && matchMus && matchY1 && matchY2;
     });
+    setR(filtered);
+    setP(1);
+  }, [q, art, mus, y1, y2]);
 
-    setFilteredPaintings(filtered);
-    setCurrentPage(1);
-  }, [searchTerm, selectedArtist, selectedMuseum, startYear, endYear]);
-
-  const toggleTheme = () => {
-    setIsDarkTheme(!isDarkTheme);
+  const handleTheme = () => {
+    setT(!t);
     document.documentElement.classList.toggle('light-theme');
   };
 
-  const toggleAccordion = (section) => {
-    setAccordionOpen(prev => ({ ...prev, [section]: !prev[section] }));
+  const toggleAcc = (key) => {
+    setAcc(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const clearFilters = () => {
-    setSelectedArtist('');
-    setSelectedMuseum('');
-    setStartYear('');
-    setEndYear('');
-    setSearchTerm('');
+  const clearAll = () => {
+    setArt('');
+    setMus('');
+    setY1('');
+    setY2('');
+    setQ('');
   };
 
-  const totalPages = Math.ceil(filteredPaintings.length / ITEMS_PER_PAGE);
-  const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
-  const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
-  const currentPaintings = filteredPaintings.slice(indexOfFirstItem, indexOfLastItem);
+  const total = Math.ceil(r.length / LIMIT);
+  const last = p * LIMIT;
+  const first = last - LIMIT;
+  const current = r.slice(first, last);
 
   return (
-    <div className={`app ${isDarkTheme ? '' : 'light-theme'}`}>
-      {/* HEADER */}
+    <div className={`app ${t ? '' : 'light-theme'}`}>
       <header className="header">
         <div className="container-1440">
           <div className="header-content">
-            <button className="theme-btn" onClick={toggleTheme}>
-              <img src={isDarkTheme ? lightBtn : darkBtn} alt="Toggle Theme" />
+            <button className="theme-btn" onClick={handleTheme}>
+              <img src={t ? a1 : a2} alt="Toggle Theme" />
             </button>
 
             <div className="search-row">
               <div className="search-input-wrapper">
-                {/* Вместо текстового эмодзи теперь рендерится ваша SVG-лупа */}
-                <img src={searchIcon} className="search-icon" alt="Search icon" />
+                <img src={a4} className="search-icon" alt="Search icon" />
                 <input
                   type="text"
                   className="search-input"
                   placeholder="Painting title"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  value={q}
+                  onChange={e => setQ(e.target.value)}
                 />
               </div>
 
-              <button className="filter-btn" onClick={() => setIsSidebarOpen(true)}>
-                <img src={filterIcon} alt="Open Filter" />
+              <button className="filter-btn" onClick={() => setS(true)}>
+                <img src={a3} alt="Open Filter" />
               </button>
             </div>
           </div>
         </div>
       </header>
 
-      {/* GALLERY */}
       <main className="main-content">
         <div className="container-1440">
           <div className="gallery-grid" id="gallery">
-            {currentPaintings.length > 0 ? (
-              currentPaintings.map(painting => (
-                <div key={painting.id} className="card">
+            {current.length > 0 ? (
+              current.map(item => (
+                <div key={item.id} className="card">
                   <div className="card-img-wrapper">
-                    <img src={painting.img} className="card-img" alt={painting.title} />
+                    <img src={item.img} className="card-img" alt={item.title} />
                   </div>
-                  
                   <div className="card-bottom">
                     <div className="gold-line"></div>
                     <div className="card-text">
-                      <div className="card-title">{painting.title}</div>
-                      <div className="card-date">{painting.year}</div>
+                      <div className="card-title">{item.title}</div>
+                      <div className="card-date">{item.year}</div>
                     </div>
                     <div className="card-arrow">
                       <span className="arrow-icon">›</span>
                     </div>
                   </div>
-
                   <div className="hover-info">
-                    <div className="hover-artist">{painting.artist}</div>
-                    <div className="hover-museum">{painting.museum}</div>
+                    <div className="hover-artist">{item.artist}</div>
+                    <div className="hover-museum">{item.museum}</div>
                   </div>
                 </div>
               ))
@@ -154,35 +142,32 @@ function App() {
             )}
           </div>
 
-          {/* ПАГИНАЦИЯ */}
-          {totalPages > 1 && (
+          {total > 1 && (
             <div className="pagination-wrapper">
               <div className="pagination">
-                <button 
-                  className="pagination-arrow" 
-                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                  disabled={currentPage === 1}
+                <button
+                  className="pagination-arrow"
+                  onClick={() => setP(prev => Math.max(prev - 1, 1))}
+                  disabled={p === 1}
                 >
                   ‹
                 </button>
-                
-                {Array.from({ length: totalPages }, (_, index) => {
-                  const pageNum = index + 1;
+                {Array.from({ length: total }, (_, i) => {
+                  const num = i + 1;
                   return (
                     <button
-                      key={pageNum}
-                      className={`pagination-btn ${currentPage === pageNum ? 'active' : ''}`}
-                      onClick={() => setCurrentPage(pageNum)}
+                      key={num}
+                      className={`pagination-btn ${p === num ? 'active' : ''}`}
+                      onClick={() => setP(num)}
                     >
-                      {pageNum}
+                      {num}
                     </button>
                   );
                 })}
-
-                <button 
-                  className="pagination-arrow" 
-                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                  disabled={currentPage === totalPages}
+                <button
+                  className="pagination-arrow"
+                  onClick={() => setP(prev => Math.min(prev + 1, total))}
+                  disabled={p === total}
                 >
                   ›
                 </button>
@@ -192,86 +177,60 @@ function App() {
         </div>
       </main>
 
-      {/* ФИЛЬТР САЙДБАР */}
-      <div 
-        className={`filter-overlay ${isSidebarOpen ? 'active' : ''}`} 
-        onClick={() => setIsSidebarOpen(false)}
+      <div
+        className={`filter-overlay ${s ? 'active' : ''}`}
+        onClick={() => setS(false)}
       ></div>
-      
-      <div className={`filter-sidebar ${isSidebarOpen ? 'open' : ''}`}>
-        <button className="close-filter-btn" onClick={() => setIsSidebarOpen(false)}>×</button>
-        
+
+      <div className={`filter-sidebar ${s ? 'open' : ''}`}>
+        <button className="close-filter-btn" onClick={() => setS(false)}>×</button>
         <div className="filter-sidebar-content">
-          <div className={`accordion-item ${accordionOpen.artist ? 'active' : ''}`}>
-            <div className="accordion-header" onClick={() => toggleAccordion('artist')}>
+          <div className={`accordion-item ${acc.a ? 'active' : ''}`}>
+            <div className="accordion-header" onClick={() => toggleAcc('a')}>
               <span>Artist</span>
-              <span className="accordion-icon">{accordionOpen.artist ? '−' : '+'}</span>
+              <span className="accordion-icon">{acc.a ? '−' : '+'}</span>
             </div>
             <div className="accordion-body">
-              <select 
-                className="sidebar-select" 
-                value={selectedArtist}
-                onChange={(e) => setSelectedArtist(e.target.value)}
-              >
+              <select className="sidebar-select" value={art} onChange={e => setArt(e.target.value)}>
                 <option value="">All Artists</option>
-                {uniqueArtists.map(artist => (
-                  <option key={artist} value={artist}>{artist}</option>
-                ))}
+                {artists.map(a => <option key={a} value={a}>{a}</option>)}
               </select>
             </div>
           </div>
 
-          <div className={`accordion-item ${accordionOpen.museum ? 'active' : ''}`}>
-            <div className="accordion-header" onClick={() => toggleAccordion('museum')}>
+          <div className={`accordion-item ${acc.m ? 'active' : ''}`}>
+            <div className="accordion-header" onClick={() => toggleAcc('m')}>
               <span>Museum</span>
-              <span className="accordion-icon">{accordionOpen.museum ? '−' : '+'}</span>
+              <span className="accordion-icon">{acc.m ? '−' : '+'}</span>
             </div>
             <div className="accordion-body">
-              <select 
-                className="sidebar-select" 
-                value={selectedMuseum}
-                onChange={(e) => setSelectedMuseum(e.target.value)}
-              >
+              <select className="sidebar-select" value={mus} onChange={e => setMus(e.target.value)}>
                 <option value="">All Museums</option>
-                {uniqueMuseums.map(museum => (
-                  <option key={museum} value={museum}>{museum}</option>
-                ))}
+                {museums.map(m => <option key={m} value={m}>{m}</option>)}
               </select>
             </div>
           </div>
 
-          <div className={`accordion-item ${accordionOpen.years ? 'active' : ''}`}>
-            <div className="accordion-header" onClick={() => toggleAccordion('years')}>
+          <div className={`accordion-item ${acc.y ? 'active' : ''}`}>
+            <div className="accordion-header" onClick={() => toggleAcc('y')}>
               <span>Years</span>
-              <span className="accordion-icon">{accordionOpen.years ? '−' : '+'}</span>
+              <span className="accordion-icon">{acc.y ? '−' : '+'}</span>
             </div>
             <div className="accordion-body">
               <div className="sidebar-years-range">
-                <input 
-                  type="number" 
-                  className="sidebar-input" 
-                  placeholder="From" 
-                  value={startYear}
-                  onChange={(e) => setStartYear(e.target.value)}
-                />
+                <input type="number" className="sidebar-input" placeholder="From" value={y1} onChange={e => setY1(e.target.value)} />
                 <span className="dash">—</span>
-                <input 
-                  type="number" 
-                  className="sidebar-input" 
-                  placeholder="To" 
-                  value={endYear}
-                  onChange={(e) => setEndYear(e.target.value)}
-                />
+                <input type="number" className="sidebar-input" placeholder="To" value={y2} onChange={e => setY2(e.target.value)} />
               </div>
             </div>
           </div>
         </div>
 
         <div className="sidebar-actions">
-          <button className="sidebar-show-btn" onClick={() => setIsSidebarOpen(false)}>
-            Show items ({filteredPaintings.length})
+          <button className="sidebar-show-btn" onClick={() => setS(false)}>
+            Show items ({r.length})
           </button>
-          <button className="sidebar-clear-btn" onClick={clearFilters}>
+          <button className="sidebar-clear-btn" onClick={clearAll}>
             Clear all
           </button>
         </div>
