@@ -1,0 +1,365 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@400;500;600;700&display=swap');
+
+:root {
+    --bg-body: #121212;
+    --bg-header: #121212;
+    --bg-card: #121212;
+    --bg-card-bottom: #121212;
+    --text-primary: #ffffff;
+    --text-date: #AB8956;
+    --search-bg: #1A1818;
+    --search-text: #ffffff;
+    --search-placeholder: #8A8A8A;
+    --search-border: transparent;
+    --border-active: #121212;
+    --btn-bg: #1A1818;
+    --btn-hover: #121212;
+}
+
+.light-theme {
+    --bg-body: #f8f8f8;
+    --bg-header: #f8f8f8;
+    --bg-card: #ffffff;
+    --bg-card-bottom: rgba(255, 255, 255, 0.96);
+    --text-primary: #121212;
+    --search-bg: #ffffff;
+    --search-text: #121212;
+    --search-placeholder: #666666;
+    --search-border: #121212;
+    --border-active: #121212;
+    --btn-bg: #f8f8f8;
+    --btn-hover: #e5e5e5;
+    --text-date: #9B4B4B;
+
+    .search-input { border: 1px solid #DEDEDE; border-radius: 1px; }
+    .hover-museum { color: #555555; }
+    .card-bottom { background-color: rgba(255, 255, 255, 0.96); }
+    .pagination-btn { color: #1A1818; border-color: #1A181830; }
+    .pagination-arrow { color: #1A1818; border-color: #1A181830; }
+    .pagination-dots { color: #666666; }
+    
+    .search-icon {
+        filter: invert(1); /* Инвертируем цвет лупы для светлой темы */
+    }
+}
+
+/* ====================== ГЛОБАЛЬНЫЕ СТИЛИ ====================== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background-color: var(--bg-body);
+    color: var(--text-primary);
+    font-family: 'Inter', system-ui, sans-serif;
+}
+
+.container-1440 {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 100px;
+}
+
+/* ====================== КНОПКИ УПРАВЛЕНИЯ ====================== */
+.theme-btn,
+.filter-btn {
+    width: 36px;
+    height: 36px;
+    background: var(--btn-bg);
+    border: none;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    
+    &:hover { background: var(--btn-hover); }
+}
+
+.theme-btn {
+    border-radius: 50%;
+    background: transparent;
+    &:hover { background: rgba(255, 255, 255, 0.05); }
+}
+
+/* ====================== HEADER ====================== */
+.header { 
+    padding: 20px 0 32px; 
+}
+
+.header-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; 
+    gap: 24px;
+}
+
+/* Строка с полем ввода и кнопкой фильтра */
+.search-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 392px; /* Совпадает с шириной карточек */
+}
+
+.search-input-wrapper { 
+    position: relative;
+    width: 344px; /* 392px - 12px (отступ) - 36px (кнопка фильтра) */
+}
+
+.search-input {
+    width: 100%; 
+    height: 36px;
+    background: var(--search-bg);
+    border: 1px solid var(--search-border);
+    border-radius: 4px;
+    padding-left: 42px; /* Место под иконку-лупу */
+    padding-right: 16px;
+    color: var(--search-text); 
+    font-size: 15px;
+    
+    &:focus { outline: none; border-color: var(--border-active); }
+    &::placeholder { color: var(--search-placeholder); }
+}
+
+/* Новые стили для вашей SVG-лупы */
+.search-icon {
+    position: absolute;
+    left: 14px; 
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+    pointer-events: none;
+    opacity: 0.35; /* Приглушенный цвет в тон плейсхолдера макета */
+    transition: opacity 0.2s ease;
+}
+
+.search-input-wrapper:focus-within .search-icon {
+    opacity: 0.7; /* Легкая подсветка лупы при фокусе */
+}
+
+/* ====================== ГАЛЕРЕЯ ====================== */
+.main-content { padding-top: 24px; padding-bottom: 80px; }
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 392px);
+    gap: 40px 32px;
+    justify-content: center;
+}
+
+/* ====================== КАРТОЧКА ====================== */
+.card {
+    position: relative;
+    width: 392px; height: 260px;
+    overflow: hidden;
+    cursor: pointer;
+    background-color: var(--bg-card);
+
+    .card-img-wrapper { position: absolute; inset: 0; overflow: hidden; }
+    .card-img {
+        width: 100%; height: 100%;
+        object-fit: cover;
+        transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    &:hover .card-img { transform: scale(1.08); }
+    &:hover .card-text { opacity: 0; transform: translateY(8px); }
+    &:hover .hover-info { opacity: 1; transform: translateX(0); }
+
+    .card-bottom {
+        position: absolute; bottom: 0; left: 0;
+        width: 300px; height: 82px;
+        background-color: var(--bg-card-bottom);
+        display: flex; align-items: center; gap: 16px;
+        z-index: 3;
+    }
+    .card-text { display: flex; flex-direction: column; transition: all 0.35s ease; z-index: 4; }
+    .card-title {
+        font-family: 'Cormorant SC', serif;
+        font-size: 16px; font-weight: 600;
+        text-transform: uppercase;
+        line-height: 1.1; letter-spacing: 0.5px;
+        color: var(--text-primary);
+    }
+    .card-date {
+        font-size: 15px;
+        color: var(--text-date);
+        font-weight: 500;
+    }
+
+    .card-arrow { display: none; }
+    .gold-line {
+        width: 2px;
+        height: 36px;
+        background: var(--text-date);
+        border-radius: 2px;
+    }
+    .hover-info {
+        position: absolute; bottom: 24px; left: 24px;
+        opacity: 0; transform: translateX(-40px);
+        transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+        z-index: 5; pointer-events: none;
+    }
+    .hover-artist {
+        font-family: 'Cormorant SC', serif;
+        font-size: 16px; font-weight: 500;
+        text-transform: uppercase;
+        line-height: 1.15; letter-spacing: 0.6px;
+        color: var(--text-primary);
+    }
+    .hover-museum {
+        font-size: 13px; font-weight: 400;
+        color: #aaaaaa; margin-top: 3px;
+    }
+}
+
+/* ====================== ПАГИНАЦИЯ ====================== */
+.pagination-wrapper { display: flex; justify-content: center; padding-top: 40px; }
+.pagination { display: flex; align-items: center; gap: 8px; }
+
+.pagination-btn,
+.pagination-arrow {
+    width: 36px; height: 36px;
+    background: transparent;
+    border: 1px solid #1A1818;
+    color: #DEDEDE;
+    border-radius: 4px;
+    font-size: 15px; font-weight: 500;
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center;
+}
+
+.pagination-btn.active { background: #DEDEDE; color: #1A1818; font-weight: 600; }
+.pagination-btn:hover:not(.active) { background: #EAB30810; }
+.pagination-arrow { font-size: 24px; }
+.pagination-dots { color: #8A8A8A; padding: 0 8px; }
+.pagination-arrow:disabled { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+
+/* ====================== САЙДБАР-ФИЛЬТР ====================== */
+.filter-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 99;
+    opacity: 0;
+    visibility: hidden;
+    background-color: rgba(0, 0, 0, 0.4);
+    transition: all 0.4s ease;
+    &.active { opacity: 1; visibility: visible; }
+}
+
+.filter-sidebar {
+    position: fixed;
+    top: 0; right: -100%;
+    width: 500px; max-width: 100%; height: 100vh;
+    background-color: var(--bg-body);
+    z-index: 100;
+    padding: 60px 40px 40px;
+    display: flex; flex-direction: column;
+    transition: right 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+    overflow-y: auto;
+    &.open { right: 0; }
+}
+
+.close-filter-btn {
+    position: absolute; top: 32px; right: 32px;
+    background: none; border: none;
+    color: var(--text-primary); cursor: pointer;
+    transition: transform 0.3s ease;
+    font-size: 36px; line-height: 1;
+    &:hover { transform: rotate(90deg); }
+}
+
+.filter-sidebar-content { margin-top: 40px; display: flex; flex-direction: column; gap: 32px; }
+.accordion-header {
+    display: flex; justify-content: space-between; align-items: center;
+    cursor: pointer; font-family: 'Cormorant SC', serif;
+    color: var(--text-primary); font-size: 18px; letter-spacing: 0.5px; user-select: none;
+}
+.accordion-icon { font-size: 24px; font-weight: 300; line-height: 1; }
+.accordion-body { max-height: 0; overflow: hidden; opacity: 0; transition: all 0.4s ease; }
+.accordion-item.active .accordion-body { max-height: 150px; opacity: 1; margin-top: 24px; }
+
+.sidebar-select, .sidebar-input {
+    width: 100%; background: var(--search-bg);
+    border: 1px solid var(--search-border); color: var(--search-text);
+    padding: 12px 16px; border-radius: 4px; font-size: 14px; appearance: none;
+}
+.sidebar-select {
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%238A8A8A' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 16px center;
+}
+.sidebar-select:focus, .sidebar-input:focus { outline: none; border-color: #d4af37; }
+.sidebar-years-range { display: flex; align-items: center; gap: 12px; .dash { color: var(--text-primary); } }
+
+.sidebar-actions { margin-top: auto; display: flex; justify-content: space-between; align-items: center; padding-top: 40px; }
+.sidebar-show-btn {
+    background: transparent; border: none; color: var(--text-primary);
+    font-size: 12px; font-weight: 600; letter-spacing: 1px;
+    text-transform: uppercase; text-decoration: underline; text-underline-offset: 4px; cursor: pointer;
+    &:hover { opacity: 0.7; }
+}
+.sidebar-clear-btn {
+    background: transparent; border: none; color: #666;
+    font-size: 12px; font-weight: 600; letter-spacing: 1px;
+    text-transform: uppercase; text-decoration: underline; text-underline-offset: 4px; cursor: pointer;
+    &:hover { color: var(--text-primary); }
+}
+
+/* ====================== АДАПТИВ ====================== */
+@media (max-width: 420px) {
+    .container-1440 { padding: 10px 16px; }
+    .header { padding: 16px 0 24px; }
+    .search-row { width: 100%; }
+    .search-input-wrapper { width: calc(100% - 48px); }
+    .gallery-grid { grid-template-columns: 1fr; gap: 24px 16px; justify-items: center; }
+    .card { width: 100%; max-width: 280px; height: auto; aspect-ratio: 280 / 185; }
+    .card .card-arrow {
+        display: flex; position: absolute; right: 0; bottom: 0;
+        width: 24px; height: 45px; background: var(--text-date);
+        align-items: center; justify-content: center; font-size: 18px; color: #fff; z-index: 5;
+    }
+    .card .card-title, .card .card-date { font-size: 12px; }
+    .arrow-icon { width: 20px; height: 20px; }
+    .card .card-bottom { width: 260px; height: 45px; }
+    .filter-sidebar { width: 100%; padding: 50px 24px 30px; }
+}
+    
+@media (min-width: 420px) and (max-width: 768px) {
+    .container-1440 { padding: 0 32px; }
+    .search-row { width: 344px; }
+    .search-input-wrapper { width: 296px; }
+    .gallery-grid { grid-template-columns: repeat(2, 352px); gap: 24px 16px; justify-items: center; }
+    .card { width: 100%; max-width: 352px; height: auto; aspect-ratio: 352 / 220; }
+    .card .card-date { font-size: 16px; }
+    .card .card-bottom { width: 300px; height: 66px; }
+    .card .card-arrow {
+        display: flex; position: absolute; right: 0; bottom: 0;
+        width: 24px; height: 66px; background: var(--text-date);
+        align-items: center; justify-content: center; font-size: 18px; color: #fff; z-index: 5;
+    }
+    .arrow-icon { width: 20px; height: 20px; }
+    .filter-sidebar { width: 50%; padding: 140px 24px 30px; }
+    .close-filter-btn { top: 90px; }
+}
+
+@media (min-width: 769px) and (max-width: 1440px) {
+    .container-1440 { padding: 0 32px; }
+    .gallery-grid { grid-template-columns: repeat(3, 392px); gap: 24px 16px; justify-items: center; }
+    .card { width: 100%; max-width: 392px; height: auto; aspect-ratio: 392 / 260; }
+    .card .card-date { font-size: 16px; }
+    .card .card-bottom { width: 324px; height: 66px; }
+    .filter-sidebar { width: 50%; padding: 140px 24px 30px; }
+    .close-filter-btn { top: 90px; }
+}
+
+@media (min-width: 1024px) and (max-width: 1440px) {
+    .container-1440 { padding: 16px 100px; }
+    .gallery-grid { grid-template-columns: repeat(3, 392px); gap: 40px 32px; justify-content: center; }
+    .card { width: 100%; max-width: 392px; height: auto; aspect-ratio: 392 / 260; }
+    .card-bottom { width: 300px; height: 82px; }
+    .filter-sidebar { width: 35%; padding: 200px 24px 280px; }
+    .close-filter-btn { top: 150px; }
+}
