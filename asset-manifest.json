@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/MuseumSite/static/css/main.d69e1a70.css",
-    "main.js": "/MuseumSite/static/js/main.176e6226.js",
+    "main.js": "/MuseumSite/static/js/main.75d3e179.js",
     "index.html": "/MuseumSite/index.html",
     "static/media/icons8-search.svg": "/MuseumSite/static/media/icons8-search.96a6f0f42094863e036e292ce1b267be.svg",
     "main.d69e1a70.css.map": "/MuseumSite/static/css/main.d69e1a70.css.map",
-    "main.176e6226.js.map": "/MuseumSite/static/js/main.176e6226.js.map"
+    "main.75d3e179.js.map": "/MuseumSite/static/js/main.75d3e179.js.map"
   },
   "entrypoints": [
     "static/css/main.d69e1a70.css",
-    "static/js/main.176e6226.js"
+    "static/js/main.75d3e179.js"
   ]
 }
